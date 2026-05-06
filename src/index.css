@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+/* ─── Global Kiosk Styles ──────────────────────────────────────────────────── */
+
+/* Smooth transitions for all interactive elements */
+button,
+a,
+[role="button"] {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+/* Ensure focus rings are visible for accessibility */
+:focus-visible {
+  outline: 3px solid rgba(96, 165, 250, 0.7);
+  outline-offset: 2px;
+}
+
+/* ─── Custom animations ─────────────────────────────────────────────────────── */
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes voiceWave {
+  from {
+    transform: scaleY(0.2);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* ─── Utility animation classes ─────────────────────────────────────────────── */
+
+.animate-slide-up {
+  animation: slideUpFade 0.35s ease-out both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out both;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.25s ease-out both;
+}
+
+/* ─── Kiosk card grid ───────────────────────────────────────────────────────── */
+
+/* Stagger card entrance animations */
+.location-card:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.location-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.location-card:nth-child(3) {
+  animation-delay: 0.15s;
+}
+.location-card:nth-child(4) {
+  animation-delay: 0.2s;
+}
+.location-card:nth-child(5) {
+  animation-delay: 0.25s;
+}
+.location-card:nth-child(6) {
+  animation-delay: 0.3s;
+}
+
+/* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
+
+.scrollable::-webkit-scrollbar {
+  width: 4px;
+}
+.scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollable::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+}
+.scrollable::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ─── Line clamp utility ────────────────────────────────────────────────────── */
+
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
