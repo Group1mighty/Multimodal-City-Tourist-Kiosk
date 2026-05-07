@@ -1,4 +1,4 @@
- import React from 'react';
+import React from 'react';
 import type { Category } from '../../types';
 import { CATEGORY_META, locations } from '../../data/locations';
 import { cn } from '../../utils/cn';
@@ -54,7 +54,7 @@ export const CategorySidebar: React.FC<CategorySidebarProps> = ({
               onSelect(cat);
             }}
             aria-pressed={isActive}
-            aria-label={Filter by ${cat} — ${count} locations}
+            aria-label={`Filter by ${cat} — ${count} locations`}
             className={cn(
               // Base styles — kiosk-compliant minimum touch target
               'group relative flex items-center gap-4 w-full px-4 rounded-2xl shrink-0',
@@ -106,7 +106,8 @@ export const CategorySidebar: React.FC<CategorySidebarProps> = ({
                 {meta.description}
               </p>
             </div>
-[5/6/2026 2:25 PM] ak_ad: {/* Count badge */}
+
+            {/* Count badge */}
             <span className={cn(
               'shrink-0 min-w-[28px] h-7 px-2 rounded-full flex items-center justify-center',
               'text-xs font-bold transition-colors duration-200',
@@ -139,7 +140,7 @@ export const CategorySidebar: React.FC<CategorySidebarProps> = ({
         {[
           { emoji: '👆', tip: 'Tap any card to see details' },
           { emoji: '🎤', tip: 'Use voice to search hands-free' },
-          { emoji: '⭐️', tip: 'Ratings from verified visitors' },
+          { emoji: '⭐', tip: 'Ratings from verified visitors' },
         ].map(({ emoji, tip }) => (
           <div key={tip} className="flex items-start gap-2.5">
             <span className="text-base leading-none mt-0.5">{emoji}</span>

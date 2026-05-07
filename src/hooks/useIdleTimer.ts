@@ -2,7 +2,7 @@ import { useEffect, useRef, useCallback } from 'react';
 
 /**
  * useIdleTimer
- * Fires onIdle after timeoutMs of no user interaction.
+ * Fires `onIdle` after `timeoutMs` of no user interaction.
  * Resets on any touch, mouse move, keypress, or click event.
  */
 export function useIdleTimer(

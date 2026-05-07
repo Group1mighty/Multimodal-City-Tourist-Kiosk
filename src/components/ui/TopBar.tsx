@@ -39,7 +39,7 @@ export const TopBar: React.FC<TopBarProps> = ({ currentTime, city, onToggleMenu,
       {/* Center: Brand */}
       <div className="flex flex-col items-center shrink-0">
         <div className="flex items-center gap-2.5">
-          <span className="text-2xl sm:text-3xl">🏙</span>
+          <span className="text-2xl sm:text-3xl">🏙️</span>
           <div>
             <h1 className="text-white font-black text-2xl sm:text-3xl tracking-tight leading-none">
               Nova<span className="text-blue-400">Crest</span>

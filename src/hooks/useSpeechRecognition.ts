@@ -1,4 +1,4 @@
- /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export type RecognitionStatus = 'idle' | 'listening' | 'error' | 'unsupported';
@@ -15,7 +15,7 @@ export interface UseSpeechRecognitionOptions {
 /**
  * useSpeechRecognition
  * Wraps the Web Speech API's SpeechRecognition interface.
- * Uses any for the recognition instance to avoid TypeScript lib version conflicts.
+ * Uses `any` for the recognition instance to avoid TypeScript lib version conflicts.
  */
 export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) {
   const {
@@ -34,7 +34,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
 
   const isSupported = useCallback((): boolean => {
     return !!(
-      (window as any).SpeechRecognition 
+      (window as any).SpeechRecognition ||
       (window as any).webkitSpeechRecognition
     );
   }, []);
@@ -43,7 +43,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
     if (!isSupported()) return null;
 
     const SpeechRecognitionClass: any =
-      (window as any).SpeechRecognition 
+      (window as any).SpeechRecognition ||
       (window as any).webkitSpeechRecognition;
 
     const recognition = new SpeechRecognitionClass();
@@ -98,7 +98,7 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
           ? 'No speech detected. Please try again.'
           : event.error === 'network'
           ? 'Network error. Please check your connection.'
-          : Voice recognition error: ${event.error};
+          : `Voice recognition error: ${event.error}`;
 
       setStatus('error');
       onError?.(errorMsg);
@@ -135,7 +135,8 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
     setStatus('idle');
     setInterimTranscript('');
   }, []);
-const abort = useCallback(() => {
+
+  const abort = useCallback(() => {
     if (recognitionRef.current) {
       recognitionRef.current.abort();
       recognitionRef.current = null;

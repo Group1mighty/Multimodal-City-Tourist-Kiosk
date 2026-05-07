@@ -1,13 +1,52 @@
 @import "tailwindcss";
 
+@theme {
+  --breakpoint-xs: 320px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+  --breakpoint-kiosk: 1920px;
+}
+
+:root {
+  /* Fluid typography bases */
+  --font-fluid-sm: clamp(0.875rem, 1.5vw, 1rem);
+  --font-fluid-base: clamp(1rem, 2vw, 1.125rem);
+  --font-fluid-lg: clamp(1.125rem, 2.5vw, 1.25rem);
+  --font-fluid-xl: clamp(1.25rem, 3vw, 1.5rem);
+  --font-fluid-2xl: clamp(1.5rem, 4vw, 2rem);
+  --font-fluid-3xl: clamp(1.875rem, 5vw, 2.5rem);
+  --font-fluid-4xl: clamp(2.25rem, 6vw, 3.5rem);
+  --font-fluid-5xl: clamp(3rem, 8vw, 5.5rem);
+  --font-fluid-6xl: clamp(3.75rem, 10vw, 7rem);
+}
+
 /* ─── Global Kiosk Styles ──────────────────────────────────────────────────── */
 
 /* Smooth transitions for all interactive elements */
 button,
 a,
-[role="button"] {
+[role="button"],
+input {
   cursor: pointer;
   touch-action: manipulation;
+}
+
+/* Minimum touch target sizes for mobile and kiosk */
+button, a, [role="button"], input {
+  min-height: 44px; /* Mobile minimum */
+}
+@media (min-width: 1024px) {
+  button, a, [role="button"], input {
+    min-height: 52px; /* Desktop/Tablet minimum */
+  }
+}
+@media (min-width: 1920px) {
+  button, a, [role="button"], input {
+    min-height: 60px; /* Large Kiosk minimum */
+  }
 }
 
 /* Ensure focus rings are visible for accessibility */
@@ -19,43 +58,28 @@ a,
 /* ─── Custom animations ─────────────────────────────────────────────────────── */
 
 @keyframes slideUpFade {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes voiceWave {
-  from {
-    transform: scaleY(0.2);
-  }
-  to {
-    transform: scaleY(1);
-  }
+  from { transform: scaleY(0.2); }
+  to { transform: scaleY(1); }
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
 
 /* ─── Utility animation classes ─────────────────────────────────────────────── */
@@ -72,32 +96,32 @@ a,
   animation: scaleIn 0.25s ease-out both;
 }
 
+.animate-slide-in-left {
+  animation: slideInLeft 0.3s ease-out both;
+}
+
 /* ─── Kiosk card grid ───────────────────────────────────────────────────────── */
 
 /* Stagger card entrance animations */
-.location-card:nth-child(1) {
-  animation-delay: 0.05s;
-}
-.location-card:nth-child(2) {
-  animation-delay: 0.1s;
-}
-.location-card:nth-child(3) {
-  animation-delay: 0.15s;
-}
-.location-card:nth-child(4) {
-  animation-delay: 0.2s;
-}
-.location-card:nth-child(5) {
-  animation-delay: 0.25s;
-}
-.location-card:nth-child(6) {
-  animation-delay: 0.3s;
-}
+.location-card:nth-child(1) { animation-delay: 0.05s; }
+.location-card:nth-child(2) { animation-delay: 0.1s; }
+.location-card:nth-child(3) { animation-delay: 0.15s; }
+.location-card:nth-child(4) { animation-delay: 0.2s; }
+.location-card:nth-child(5) { animation-delay: 0.25s; }
+.location-card:nth-child(6) { animation-delay: 0.3s; }
+.location-card:nth-child(7) { animation-delay: 0.35s; }
+.location-card:nth-child(8) { animation-delay: 0.4s; }
 
 /* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
 
+.scrollable {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
 .scrollable::-webkit-scrollbar {
   width: 4px;
+  height: 4px;
 }
 .scrollable::-webkit-scrollbar-track {
   background: transparent;
@@ -124,4 +148,11 @@ a,
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }

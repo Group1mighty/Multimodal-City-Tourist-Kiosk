@@ -111,7 +111,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onEnter, onEnterWith
       {/* Bottom vignette */}
       <div className="absolute bottom-0 left-0 right-0 h-64
         bg-gradient-to-t from-slate-950 to-transparent" />
-        {/* ── Animated background orbs ──────────────────────────────────────── */}
+
+      {/* ── Animated background orbs ──────────────────────────────────────── */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full
           bg-blue-500/10 blur-3xl animate-pulse"
@@ -127,15 +128,15 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onEnter, onEnterWith
 
       {/* ── Top bar ───────────────────────────────────────────────────────── */}
       <header className="relative z-10 w-full flex items-center justify-between
-        px-10 pt-8 pb-4">
+        px-6 md:px-10 pt-6 md:pt-8 pb-4">
         {/* City branding */}
-        <div className="flex items-center gap-3">
-          <span className="text-4xl drop-shadow-lg">🏙</span>
+        <div className="flex items-center gap-2 md:gap-3">
+          <span className="text-3xl md:text-4xl drop-shadow-lg">🏙️</span>
           <div>
-            <h1 className="text-white font-black text-3xl tracking-tight leading-none drop-shadow">
+            <h1 className="text-white font-black text-2xl md:text-4xl tracking-tight leading-none drop-shadow">
               Nova<span className="text-blue-400">Crest</span>
             </h1>
-            <p className="text-white/40 text-xs tracking-widest uppercase">
+            <p className="text-white/40 text-[10px] md:text-xs tracking-widest uppercase">
               City Tourist Kiosk
             </p>
           </div>
@@ -143,10 +144,10 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onEnter, onEnterWith
 
         {/* Date & Time */}
         <div className="text-right">
-          <p className="text-white font-bold text-4xl tabular-nums drop-shadow">
+          <p className="text-white font-bold text-2xl md:text-4xl tabular-nums drop-shadow">
             {currentTime}
           </p>
-          <p className="text-white/50 text-sm">{currentDate}</p>
+          <p className="text-white/50 text-[10px] md:text-sm">{currentDate}</p>
         </div>
       </header>
 
@@ -162,15 +163,13 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onEnter, onEnterWith
         </div>
 
         {/* Main heading */}
-        <div className="space-y-3">
-          <h2 className="text-white font-black leading-none drop-shadow-2xl"
-            style={{ fontSize: 'clamp(3rem, 6vw, 5.5rem)' }}>
+        <div className="space-y-2 md:space-y-3">
+          <h2 className="text-white font-black leading-none drop-shadow-2xl text-5xl md:text-7xl lg:text-8xl">
             Your City,
           </h2>
           <h2 className="font-black leading-none drop-shadow-2xl
             bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-500
-            bg-clip-text text-transparent"
-            style={{ fontSize: 'clamp(3rem, 6vw, 5.5rem)' }}>
+            bg-clip-text text-transparent text-5xl md:text-7xl lg:text-8xl">
             Explored.
           </h2>
         </div>
@@ -187,43 +186,44 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onEnter, onEnterWith
           </p>
         </div>
 
-        {/* CTA section — side by side */}
-        <div className="flex items-center gap-6 mt-4">
+        {/* CTA section — side by side or stacked */}
+        <div className="flex flex-col md:flex-row items-center gap-6 mt-4 w-full max-w-2xl justify-center">
 
           {/* Touch to Start */}
           <div className="relative flex flex-col items-center gap-3">
             {/* Outer pulse rings */}
             {pulseRing && (
               <>
-                <span className="absolute w-44 h-44 rounded-full border-2 border-white/20
+                <span className="absolute w-36 h-36 md:w-44 md:h-44 rounded-full border-2 border-white/20
                   animate-ping" style={{ animationDuration: '1s' }} />
-                <span className="absolute w-56 h-56 rounded-full border border-white/10
+                <span className="absolute w-44 h-44 md:w-56 md:h-56 rounded-full border border-white/10
                   animate-ping" style={{ animationDuration: '1s', animationDelay: '0.1s' }} />
               </>
             )}
+
             {/* Main CTA button */}
-            <div className="w-36 h-36 rounded-full border-2 border-white/30
+            <div className="w-28 h-28 md:w-36 md:h-36 rounded-full border-2 border-white/30
               bg-white/10 backdrop-blur-md
               flex items-center justify-center
               shadow-2xl shadow-black/30
               group-hover:scale-105 transition-transform">
-              <div className="w-28 h-28 rounded-full border border-white/20
+              <div className="w-20 h-20 md:w-28 md:h-28 rounded-full border border-white/20
                 bg-white/10 flex flex-col items-center justify-center gap-2">
-                <TouchpadOff size={32} className="text-white/80" />
-                <span className="text-white font-bold text-xs uppercase tracking-widest">
+                <TouchpadOff size={28} className="text-white/80" />
+                <span className="text-white font-bold text-[10px] md:text-xs uppercase tracking-widest">
                   Touch
                 </span>
               </div>
             </div>
 
-            <p className="text-white/50 text-sm font-medium">Touch to explore</p>
+            <p className="text-white/50 text-xs md:text-sm font-medium">Touch to explore</p>
           </div>
 
-          {/* Vertical divider */}
-          <div className="flex flex-col items-center gap-2 self-stretch justify-center">
-            <div className="flex-1 w-px bg-white/15" />
-            <span className="text-white/30 text-sm font-medium">or</span>
-            <div className="flex-1 w-px bg-white/15" />
+          {/* Vertical/Horizontal divider */}
+          <div className="flex flex-row md:flex-col items-center gap-2 self-stretch justify-center w-full md:w-auto">
+            <div className="flex-1 w-full md:w-px h-px md:h-full bg-white/15" />
+            <span className="text-white/30 text-xs md:text-sm font-medium px-2 md:px-0">or</span>
+            <div className="flex-1 w-full md:w-px h-px md:h-full bg-white/15" />
           </div>
 
           {/* Voice shortcut */}
@@ -256,18 +256,18 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onEnter, onEnterWith
       </div>
 
       {/* ── Bottom stats strip ────────────────────────────────────────────── */}
-      <footer className="relative z-10 w-full px-10 pb-8">
-        <div className="flex items-center justify-center gap-12">
+      <footer className="relative z-10 w-full px-6 md:px-10 pb-6 md:pb-8">
+        <div className="flex flex-wrap items-center justify-center gap-6 md:gap-12">
           {[
             { value: '10', label: 'Locations', emoji: '📍' },
-            { value: '3', label: 'Categories', emoji: '🗂' },
-            { value: '4.5★', label: 'Avg Rating', emoji: '⭐️' },
+            { value: '3', label: 'Categories', emoji: '🗂️' },
+            { value: '4.5★', label: 'Avg Rating', emoji: '⭐' },
             { value: '2', label: 'Interaction Modes', emoji: '🎯' },
           ].map(({ value, label, emoji }) => (
-            <div key={label} className="flex flex-col items-center gap-1">
-              <span className="text-2xl">{emoji}</span>
-              <span className="text-white font-black text-2xl">{value}</span>
-              <span className="text-white/40 text-xs uppercase tracking-wider">{label}</span>
+            <div key={label} className="flex flex-col items-center gap-1 w-24 md:w-auto">
+              <span className="text-xl md:text-2xl">{emoji}</span>
+              <span className="text-white font-black text-xl md:text-2xl">{value}</span>
+              <span className="text-white/40 text-[9px] md:text-xs uppercase tracking-wider text-center">{label}</span>
             </div>
           ))}
         </div>

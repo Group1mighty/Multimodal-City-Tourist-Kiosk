@@ -1,7 +1,6 @@
-//[5/6/2026 12:05 PM] Abdulkerim Adem: 
 import { useCallback, useRef } from 'react';
 
-/*
+/**
  * useSoundEffects
  * Generates UI sound feedback using the Web Audio API.
  * No external files needed — all sounds are synthesized programmatically.
@@ -17,7 +16,7 @@ export function useSoundEffects() {
     return audioCtxRef.current;
   }, []);
 
-  / Plays a short, pleasant tap sound (sine wave click) */
+  /** Plays a short, pleasant tap sound (sine wave click) */
   const playTap = useCallback(() => {
     try {
       const ctx = getCtx();
@@ -41,7 +40,7 @@ export function useSoundEffects() {
     }
   }, [getCtx]);
 
-  /* Plays a "voice start" sound — rising two-tone */
+  /** Plays a "voice start" sound — rising two-tone */
   const playVoiceStart = useCallback(() => {
     try {
       const ctx = getCtx();
@@ -66,7 +65,7 @@ export function useSoundEffects() {
     }
   }, [getCtx]);
 
-  /* Plays a "voice stop" sound — falling two-tone */
+  /** Plays a "voice stop" sound — falling two-tone */
   const playVoiceStop = useCallback(() => {
     try {
       const ctx = getCtx();
@@ -90,7 +89,8 @@ export function useSoundEffects() {
       // Silently fail
     }
   }, [getCtx]);
- /* Plays a success chime */
+
+  /** Plays a success chime */
   const playSuccess = useCallback(() => {
     try {
       const ctx = getCtx();
@@ -112,7 +112,7 @@ export function useSoundEffects() {
     }
   }, [getCtx]);
 
-  /* Plays an error buzz */
+  /** Plays an error buzz */
   const playError = useCallback(() => {
     try {
       const ctx = getCtx();

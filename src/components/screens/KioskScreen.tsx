@@ -30,21 +30,21 @@ function buildOptionsScript(locs: Location[]): string {
   if (locs.length === 0)
     return "I didn't find any matching locations. Please try again with a different search.";
   if (locs.length === 1)
-    return I found one option: ${locs[0].name}. ${locs[0].shortDesc}. Say yes to open it, or say back to search again.;
+    return `I found one option: ${locs[0].name}. ${locs[0].shortDesc}. Say yes to open it, or say back to search again.`;
   const top = locs.slice(0, 5);
-  const nameList = top.map((l, i) => ${i + 1}. ${l.name}).join('. ');
-  const suffix = locs.length > 5 ?  Showing the top ${top.length} of ${locs.length} results. : '';
-  return I found ${top.length} options: ${nameList}.${suffix} Which one would you like? Say the name or a number.;
+  const nameList = top.map((l, i) => `${i + 1}. ${l.name}`).join('. ');
+  const suffix = locs.length > 5 ? ` Showing the top ${top.length} of ${locs.length} results.` : '';
+  return `I found ${top.length} options: ${nameList}.${suffix} Which one would you like? Say the name or a number.`;
 }
 
 function buildDetailScript(loc: Location): string {
-  const price = loc.priceRange ?  Price range: ${loc.priceRange}. : '';
-  const phone = loc.phone ?  You can reach them at ${loc.phone}. : '';
+  const price = loc.priceRange ? ` Price range: ${loc.priceRange}.` : '';
+  const phone = loc.phone ? ` You can reach them at ${loc.phone}.` : '';
   return (
-    ${loc.name}. ${loc.description}  +
-    Located at ${loc.address}.  +
-    Open: ${loc.openHours}.  +
-    Distance from here: ${loc.distance}.${price}${phone}
+    `${loc.name}. ${loc.description} ` +
+    `Located at ${loc.address}. ` +
+    `Open: ${loc.openHours}. ` +
+    `Distance from here: ${loc.distance}.${price}${phone}`
   );
 }
 
@@ -58,7 +58,7 @@ function matchLocationChoice(transcript: string, locs: Location[]): Location | n
     return locs[0];
 
   for (const [word, num] of Object.entries(NUMBER_WORDS)) {
-    if (new RegExp(\\b${word}\\b).test(t) && num <= locs.length)
+    if (new RegExp(`\\b${word}\\b`).test(t) && num <= locs.length)
       return locs[num - 1];
   }
 
@@ -85,7 +85,8 @@ interface KioskScreenProps {
   autoStartVoice?: boolean;
   onResetIdleTimer?: () => void;
 }
- export const KioskScreen: React.FC<KioskScreenProps> = ({
+
+export const KioskScreen: React.FC<KioskScreenProps> = ({
   autoStartVoice = false,
   onResetIdleTimer,
 }) => {
@@ -159,7 +160,7 @@ interface KioskScreenProps {
     (loc: Location) => {
       setSelectedLocation(loc);
       setVoiceState('speaking');
-      setVoiceMessage(Opening ${loc.name});
+      setVoiceMessage(`Opening ${loc.name}`);
       const script = buildDetailScript(loc);
       speak(script, {
         onEnd: () => {
@@ -197,7 +198,8 @@ interface KioskScreenProps {
 
       setTimeout(() => {
         const mode = voiceModeRef.current;
- // ── POST-DETAIL: user can pick another or say finish ─────────────────
+
+        // ── POST-DETAIL: user can pick another or say finish ─────────────────
         if (mode === 'post-detail') {
           const t = transcript.toLowerCase().trim();
 
@@ -282,11 +284,12 @@ interface KioskScreenProps {
         }
         if (action.type === 'SELECT_LOCATION') setSelectedLocation(action.payload as Location | null);
         if (action.type === 'SET_VOICE_MESSAGE') setVoiceMessage(action.payload as string);
- // ── Voice-driven mode: read options → listen for choice ───────────────
+
+        // ── Voice-driven mode: read options → listen for choice ───────────────
         if (
           autoStartVoice &&
           matchedLocations.length > 0 &&
-          (action.type === 'SET_CATEGORY'  action.type === 'SET_SEARCH')
+          (action.type === 'SET_CATEGORY' || action.type === 'SET_SEARCH')
         ) {
           voiceResultsRef.current = matchedLocations.slice(0, 5);
           // Combine original feedback with the options reading
@@ -370,10 +373,10 @@ interface KioskScreenProps {
       const q = searchQuery.toLowerCase().trim();
       result = result.filter(
         l =>
-          l.name.toLowerCase().includes(q) 
-          l.shortDesc.toLowerCase().includes(q) 
-          l.category.toLowerCase().includes(q) 
-          l.subCategory.toLowerCase().includes(q) 
+          l.name.toLowerCase().includes(q) ||
+          l.shortDesc.toLowerCase().includes(q) ||
+          l.category.toLowerCase().includes(q) ||
+          l.subCategory.toLowerCase().includes(q) ||
           l.tags.some(t => t.toLowerCase().includes(q))
       );
     }
@@ -381,7 +384,7 @@ interface KioskScreenProps {
   }, [activeCategory, searchQuery]);
 
   const featuredLocations = useMemo(
-    () => filteredLocations.filter(l => l.featured  savedLocationIds.includes(l.id)),
+    () => filteredLocations.filter(l => l.featured || savedLocationIds.includes(l.id)),
     [filteredLocations, savedLocationIds]
   );
   const regularLocations = useMemo(
@@ -391,7 +394,8 @@ interface KioskScreenProps {
         : filteredLocations,
     [filteredLocations, activeCategory, searchQuery, savedLocationIds]
   );
-// ── Manual voice toggle ───────────────────────────────────────────────────
+
+  // ── Manual voice toggle ───────────────────────────────────────────────────
   const handleToggleListening = useCallback(() => {
     if (voiceState === 'listening') {
       stopRecognition();
@@ -467,7 +471,7 @@ interface KioskScreenProps {
                   </h2>
                   <p className="text-white/40 text-sm mt-0.5">
                     {searchQuery
-                      ? ${filteredLocations.length} results for "${searchQuery}"
+                      ? `${filteredLocations.length} results for "${searchQuery}"`
                       : activeMeta.description}
                   </p>
                 </div>
@@ -491,7 +495,8 @@ interface KioskScreenProps {
             <div className="mb-6">
               <SearchBar value={searchQuery} onChange={setSearchQuery} onClear={() => setSearchQuery('')} onTap={handleTap} resultCount={filteredLocations.length} />
             </div>
- {filteredLocations.length === 0 ? (
+
+            {filteredLocations.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full gap-4 py-20">
                 <span className="text-7xl opacity-30">🔍</span>
                 <p className="text-white/40 text-xl font-semibold">No results found</p>
@@ -508,7 +513,7 @@ interface KioskScreenProps {
                 {activeCategory === 'All' && !searchQuery && featuredLocations.length > 0 && (
                   <section>
                     <div className="flex items-center gap-2 mb-3">
-                      <span className="text-amber-400 text-lg">⭐️</span>
+                      <span className="text-amber-400 text-lg">⭐</span>
                       <h3 className="text-white/70 text-sm font-bold uppercase tracking-widest">Featured</h3>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -574,7 +579,8 @@ interface KioskScreenProps {
           }}
         />
       )}
- {!showVoicePanel && (
+
+      {!showVoicePanel && (
         <button
           onClick={() => { handleTap(); setShowVoicePanel(true); }}
           aria-label="Open voice assistant"

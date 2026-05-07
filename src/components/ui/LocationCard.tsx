@@ -42,7 +42,7 @@ export const LocationCard: React.FC<LocationCardProps> = ({
         onTap();
         onSelect(location);
       }}
-      aria-label={View details for ${location.name}}
+      aria-label={`View details for ${location.name}`}
       className={cn(
         'group relative w-full text-left rounded-3xl overflow-hidden',
         'border-2 transition-all duration-300',
@@ -91,7 +91,7 @@ export const LocationCard: React.FC<LocationCardProps> = ({
         {featured && (
           <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full
             bg-amber-400/90 text-slate-900 text-xs font-bold backdrop-blur-sm">
-            ⭐️ Featured
+            ⭐ Featured
           </span>
         )}
 
@@ -103,7 +103,8 @@ export const LocationCard: React.FC<LocationCardProps> = ({
           {location.distance}
         </span>
       </div>
-[5/6/2026 2:32 PM] Abdulkerim: {/* Content */}
+
+      {/* Content */}
       <div className="p-4 space-y-3">
         {/* Category + subcategory badges */}
         <div className="flex items-center gap-2 flex-wrap">
