@@ -1,7 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
 
-export type RecognitionStatus = 'idle' | 'listening' | 'error' | 'unsupported';
+export type RecognitionStatus = "idle" | "listening" | "error" | "unsupported";
+
+const ERROR_MESSAGES = {
+  notAllowed: "Microphone access denied. Please allow microphone access.",
+  noSpeech: "No speech detected. Please try again.",
+  network: "Network error. Please check your connection.",
+  unsupported: "Speech recognition is not supported in this browser.",
+  startFailed: "Failed to start voice recognition.",
+} as const;
 
 export interface UseSpeechRecognitionOptions {
   lang?: string;
@@ -17,9 +25,11 @@ export interface UseSpeechRecognitionOptions {
  * Wraps the Web Speech API's SpeechRecognition interface.
  * Uses `any` for the recognition instance to avoid TypeScript lib version conflicts.
  */
-export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) {
+export function useSpeechRecognition(
+  options: UseSpeechRecognitionOptions = {},
+) {
   const {
-    lang = 'en-US',
+    lang = "en-US",
     continuous = false,
     interimResults = true,
     onTranscript,
@@ -28,15 +38,15 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
   } = options;
 
   const recognitionRef = useRef<any>(null);
-  const [status, setStatus] = useState<RecognitionStatus>('idle');
-  const [finalTranscript, setFinalTranscript] = useState('');
-  const [interimTranscript, setInterimTranscript] = useState('');
+  const [status, setStatus] = useState<RecognitionStatus>("idle");
+  const [finalTranscript, setFinalTranscript] = useState("");
+  const [interimTranscript, setInterimTranscript] = useState("");
 
   const isSupported = useCallback((): boolean => {
-    return !!(
+    const hasNativeSupport =
       (window as any).SpeechRecognition ||
-      (window as any).webkitSpeechRecognition
-    );
+      (window as any).webkitSpeechRecognition;
+    return !!hasNativeSupport;
   }, []);
 
   const buildRecognition = useCallback((): any | null => {
@@ -54,14 +64,14 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
     recognition.maxAlternatives = 1;
 
     recognition.onstart = () => {
-      setStatus('listening');
-      setFinalTranscript('');
-      setInterimTranscript('');
+      setStatus("listening");
+      setFinalTranscript("");
+      setInterimTranscript("");
     };
 
     recognition.onresult = (event: any) => {
-      let interim = '';
-      let final = '';
+      let interim = "";
+      let final = "";
 
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const result = event.results[i];
@@ -79,40 +89,52 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
       }
       if (final) {
         setFinalTranscript(final);
-        setInterimTranscript('');
+        setInterimTranscript("");
         onTranscript?.(final, true);
       }
     };
 
     recognition.onend = () => {
-      setStatus('idle');
-      setInterimTranscript('');
+      setStatus("idle");
+      setInterimTranscript("");
       onEnd?.();
     };
 
     recognition.onerror = (event: any) => {
-      const errorMsg =
-        event.error === 'not-allowed'
-          ? 'Microphone access denied. Please allow microphone access.'
-          : event.error === 'no-speech'
-          ? 'No speech detected. Please try again.'
-          : event.error === 'network'
-          ? 'Network error. Please check your connection.'
-          : `Voice recognition error: ${event.error}`;
+      let errorMsg: string;
 
-      setStatus('error');
+      if (event.error === "not-allowed") {
+        errorMsg = ERROR_MESSAGES.notAllowed;
+      } else if (event.error === "no-speech") {
+        errorMsg = ERROR_MESSAGES.noSpeech;
+      } else if (event.error === "network") {
+        errorMsg = ERROR_MESSAGES.network;
+      } else {
+        errorMsg = `Voice recognition error: ${event.error}`;
+      }
+
+      setStatus("error");
       onError?.(errorMsg);
     };
 
     return recognition;
-  }, [lang, continuous, interimResults, onTranscript, onEnd, onError, isSupported]);
+  }, [
+    lang,
+    continuous,
+    interimResults,
+    onTranscript,
+    onEnd,
+    onError,
+    isSupported,
+  ]);
 
   const start = useCallback(() => {
     if (!isSupported()) {
-      setStatus('unsupported');
-      onError?.('Speech recognition is not supported in this browser.');
+      setStatus("unsupported");
+      onError?.(ERROR_MESSAGES.unsupported);
       return;
     }
+
     try {
       if (recognitionRef.current) {
         recognitionRef.current.abort();
@@ -122,8 +144,8 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
       recognitionRef.current = recognition;
       recognition.start();
     } catch {
-      setStatus('error');
-      onError?.('Failed to start voice recognition.');
+      setStatus("error");
+      onError?.(ERROR_MESSAGES.startFailed);
     }
   }, [isSupported, buildRecognition, onError]);
 
@@ -132,8 +154,8 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
       recognitionRef.current.stop();
       recognitionRef.current = null;
     }
-    setStatus('idle');
-    setInterimTranscript('');
+    setStatus("idle");
+    setInterimTranscript("");
   }, []);
 
   const abort = useCallback(() => {
@@ -141,8 +163,8 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
       recognitionRef.current.abort();
       recognitionRef.current = null;
     }
-    setStatus('idle');
-    setInterimTranscript('');
+    setStatus("idle");
+    setInterimTranscript("");
   }, []);
 
   useEffect(() => {
@@ -154,12 +176,12 @@ export function useSpeechRecognition(options: UseSpeechRecognitionOptions = {}) 
   }, []);
 
   return {
+    isSupported: isSupported(),
+    isListening: status === "listening",
     status,
+    currentTranscript: interimTranscript || finalTranscript,
     finalTranscript,
     interimTranscript,
-    currentTranscript: interimTranscript || finalTranscript,
-    isListening: status === 'listening',
-    isSupported: isSupported(),
     start,
     stop,
     abort,
